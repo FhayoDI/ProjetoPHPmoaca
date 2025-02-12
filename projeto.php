@@ -1,4 +1,16 @@
 <?php
+//login
+// Registro
+function registro(){
+    global $DatabaseUsers;
+    global $password;
+    echo "Registro de usuários: \n";
+    $userRegistro = readline("Nome de usuário");
+    $password = readline("Senha");
+    $DatabaseUsers[]=[$userRegistro, $password];
+    $msg = "$userRegistro" . "$password";
+    file_put_contents('usuarios.txt ', $msg);
+}
 //FUNÇÃO VENDER
 function vender() {
 echo "\nVocê está no menu de vendas do sistema";
