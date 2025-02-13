@@ -5,11 +5,10 @@ function registro()
 {
     do {
         global $DatabaseUsers;
-        global $password;
         echo "Registro de usuários: \n";
         $userRegistro = readline("Nome de usuário: ");
         $password = readline("Senha: ");
-        $DatabaseUsers[] = [$userRegistro, $password];
+        $DatabaseUsers[$userRegistro] = $password;
         $msg = "Usuario: " . "$userRegistro" . "Senha:  " . "$password" . "\n";
         file_put_contents('usuarios.txt ', $msg, FILE_APPEND);
         echo "usuario registrado com sucesso, acesso ao sistema liberado!\n";
@@ -20,13 +19,34 @@ function registro()
     } while ($userloop === "sim");
 }
 
+function login() {
+        global $DatabaseUsers;
+        global $user;
+    do {
+
+        $userLogin = readline("Usuário: ");
+        $password = readline("Senha: ");
+
+        if (array_key_exists($userLogin, $DatabaseUsers)) {
+            if($DatabaseUsers[$userLogin] == $password) {
+                $user = $userLogin;
+            }
+        }
+    system('clear');
+    } while (!$user);
+
+}
+// DESLOGAR
+function deslogar(){
+    global $user;
+    $user == null;
+}
 //FUNÇÃO VENDER
 function vender()
 {
     echo "\nVocê está no menu de vendas do sistema";
     do {
         global $user;
-        global $produto;
         global $vendas;
         echo "\nInsira o produto e o preço:\n";
         $produto = readline("Produto:");
@@ -48,23 +68,44 @@ function vender()
 function logs()
 {
     do {
-        $arquivo = 0;
-        $loguser = 0;
-        $loghistorico = 0;
-        $choice = readline("Digite user para log de usuarios e hist para o historico de vendas!\n Ou digite sair para voltar ao menu inicial");
+        echo "Digite user para log de usuarios: \nHist para o historico de vendas: \nOu digite sair para voltar ao menu inicial: \n";
+        $choice = readline();
         if ($choice === "user") {
-            function usuarios()
-            {
-
-            }
+            logusuarios();
         } elseif ($choice === "hist") {
             function historico()
             {
+                echo "Aqui esta a log do historico";
+                file_get_contents('historico.txt');
 
             }
         }
     } while ($choice != "sair");
 }
+//log user
+function logusuarios()
+{
+    echo "Aqui está a log de usuarios!";
+    file_get_contents('usuarios.txt');
+}
+$DatabaseUsers = [];
+$user = null;
+$vendas = 0;
+$itensVendidos = [];
+// Login
+do {
+    echo "PGR SISTEMA DE ADMINISTRAÇÃO\n";
+    echo "1 => Login \n2 => Registro \n";
+    $temlog = readline();
+    if ($temlog == 1) {
+        login();
+    } elseif ($temlog == 2) {
+        registro();
+    } else {
+        echo "Opção invalida"
+        ($temlog = 'invalido');
+    }
+} while ($temlog === 'invalido');
 
 // MENU PRINCIPAL
 do {
@@ -78,21 +119,19 @@ do {
     if ($escolhaMenu == 1) {
         vender();
     }
-    if ($escolhaMenu == 2)
+    elseif ($escolhaMenu == 2)
     {
         registro();
     }
-    if ($escolhaMenu == 3) {
+    elseif ($escolhaMenu == 3) {
         logs();
     }
+    elseif ($escolhaMenu == 4) {
+    deslogar();
+    } else {
+        echo "opção invalida";
+    }
 } while ($escolhaMenu != 4);
+if ($user == null) {
 
-
-$password = 0;
-$DatabaseUsers = 0;
-$user = 0;
-$produto = 0;
-$vendas = 0;
-$id = 0;
-$menuinicial = 0;
-$escolhaMenu = 0;
+}
