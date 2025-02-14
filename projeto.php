@@ -71,6 +71,8 @@ function vender()
             echo "Não temos troco, a venda será cancelada! ";
         return;
         }
+        $troco = $pagamento - $preco;
+        echo "O troco é \n: $troco";
         global $databaseProducts;
         $vendas += $preco;
         $databaseProducts[] = [$user, $produto, $preco];
