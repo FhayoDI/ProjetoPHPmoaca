@@ -12,11 +12,10 @@ function registro()
         $userRegistro = readline("Nome de usuário: ");
         $password = readline("Senha: ");
         $DatabaseUsers[] = ["nome" => $userRegistro, "senha" => $password];
-        $msg = "Usuario: " . "$userRegistro" . "Senha:  " . "$password" . "\n";
-        file_put_contents('usuarios.txt ', $msg, FILE_APPEND);
+        $msg = $userRegistro . ":" . $password . "\n";
+        file_put_contents('usuarios.txt', $msg, FILE_APPEND);
         echo "usuario registrado com sucesso, acesso ao sistema liberado!\n";
         echo "cadastrar outro usuario?\n";
-        print_r($DatabaseUsers);
         $userloop = readline("digite 1 para sim ou 2 para não\n");
     } while ($userloop == 1);
     if ($userloop == 2) {
@@ -35,11 +34,14 @@ function login()
     foreach ($DatabaseUsers as $item) {
         if ($item ["nome"] == $userLogin && $item ["senha"] == $password) {
             $user = $item["nome"];
+            $msglog = $user . " logou " . date("Y-m-d H:i:s \n");
+            file_put_contents('usuarios.txt', $msglog);
             return;
         }
     }
     echo "Erro, usuário ou senha incorreto.\n";
     readline('aperte enter para tentar novamente');
+
     login();
 }
 
@@ -61,11 +63,10 @@ function vender()
         $produto = readline("Produto:");
         $preco = readline("Preço:");
         $quantia = readline("Quantia");
-        $vendas += $preco;
         global $databaseProducts;
         $databaseProducts[] = [$user, $produto, $preco];
-        $msg = "$user vendeu " . $quantia . " " . $produto . " por " . $preco . " R$";
-        file_put_contents('historico.txt', $msg, FILE_APPEND);
+        $msgprodutolog = $user . " vendeu " . $quantia . " " . $produto . " por  " . $preco . date("Y-m-d H:i:s \n");
+        file_put_contents('historico.txt', $msgprodutolog);
         echo "realizar outra venda? \n Digite sim ou não.";
         echo "\n";
         $sair = readline();
@@ -77,26 +78,33 @@ function vender()
 function logs()
 {
     do {
-        echo "Digite user para log de usuarios: \nHist para o historico de vendas: \nOu digite sair para voltar ao menu inicial: \n";
+        echo "Digite 1 para log de usuarios: \nDigite 2  para o historico de vendas: \nOu digite 3 para voltar ao menu inicial: \n";
         $choice = readline();
-        if ($choice === "user") {
+        if ($choice == "1") {
             logusuarios();
-        } elseif ($choice === "hist") {
-            function historico()
-            {
-                echo "Aqui esta a log do historico";
-                file_get_contents('historico.txt');
-
-            }
+        } elseif ($choice == "2") {
+            loghist();
         }
-    } while ($choice != "sair");
+        else if ($choice ==3) {
+            echo "saindo\n";
+            sleep(0.3);
+        }
+        else {
+            echo "opção invalida\n";
+        }
+    } while ($choice != "3");
 }
-
+//log historico
+function loghist(){
+    global $Histlog;
+    $Histlog = file_get_contents('historico.txt');
+    echo $Histlog;
+}
 //log user
-function logusuarios()
-{
-    echo "Aqui está a log de usuarios!";
-    file_get_contents('usuarios.txt');
+function logusuarios(){
+    global $Userlog;
+    $Userlog = file_get_contents('usuarios.txt');
+    echo $Userlog;
 }
 
 // Login page
@@ -114,6 +122,7 @@ function verificarlogin($temlog)
 
 
 // MENU PRINCIPAL
+
 while (true) {
     global $user;
     if ($user) {
