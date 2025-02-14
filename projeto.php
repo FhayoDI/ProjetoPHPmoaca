@@ -4,6 +4,8 @@ $DatabaseUsers[] = ["nome" => "admin", "senha" => "123"];
 $user = false;
 $vendas = 0;
 $itensVendidos = [];
+$caixa = 0;
+
 function registro()
 {
     do {
@@ -59,14 +61,22 @@ function vender()
     do {
         global $user;
         global $vendas;
+        global $caixa;
         echo "\nInsira o produto e o preço:\n";
         $produto = readline("Produto:");
         $preco = readline("Preço:");
         $quantia = readline("Quantia");
+        $pagamento = readline("Quanto o cliente pagou? \n");
+        if ($pagamento > $caixa) {
+            echo "Não temos troco, a venda será cancelada! ";
+        return;
+        }
         global $databaseProducts;
+        $vendas += $preco;
         $databaseProducts[] = [$user, $produto, $preco];
         $msgprodutolog = $user . " vendeu " . $quantia . " " . $produto . " por  " . $preco . date("Y-m-d H:i:s \n");
         file_put_contents('historico.txt', $msgprodutolog);
+        echo "venda registrada com sucesso";
         echo "realizar outra venda? \n Digite sim ou não.";
         echo "\n";
         $sair = readline();
@@ -122,11 +132,13 @@ function verificarlogin($temlog)
 
 
 // MENU PRINCIPAL
-
 while (true) {
     global $user;
     if ($user) {
-        echo "Bem vindo ao sistema\n";
+        if ($caixa == 0 && $user == true){
+            $caixa = readline("quantos reais tem em caixa?");
+        }
+        echo "Bem vindo ao sistema, Você possui: $caixa dinheiros no caixa\n";
         echo "Digite uma das opções a seguir:\n";
         echo "1 = Vender \n";
         echo "2 = Cadastrar novo usuário \n";
