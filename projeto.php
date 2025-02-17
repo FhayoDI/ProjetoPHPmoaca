@@ -71,13 +71,13 @@ function vender()
         global $user;
         global $vendas;
         global $caixa;
-        echo "\nInsira o produto ou ID e o preço:\n";
+        echo "\nInsira o produto e o preço:\n";
         $produto = readline("Produto ou ID: ");
         $preco = readline("Preço: ");
         $quantia = readline("Quantia: ");
         limparTela();
         $pagamento = readline("Quanto o cliente pagou? \n");
-        if ($pagamento > $caixa) {
+        if ($pagamento > $preco && $pagamento > $caixa) {
             echo "Não temos troco, a venda será cancelada! ";
             limparTela();
             return;
@@ -86,6 +86,7 @@ function vender()
         echo "O troco é: $troco \n";
         global $databaseProducts;
         $vendas += $preco;
+        $caixa += $vendas;
         $databaseProducts[] = [$user, $produto, $preco];
         $msgprodutolog = $user . " vendeu " . $quantia . " " . $produto . " por  " . $preco . date("Y-m-d H:i:s \n");
         file_put_contents('historico.txt', $msgprodutolog);
